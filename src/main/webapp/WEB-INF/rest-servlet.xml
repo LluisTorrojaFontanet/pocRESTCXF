@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:jaxrs="http://cxf.apache.org/jaxrs" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:util="http://www.springframework.org/schema/util" xmlns:cxf="http://cxf.apache.org/core"    
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd 
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+ 
+    <!-- to turn on annotation wiring == turns on only the registered beans
+        through ApplicationContext -->
+    <context:annotation-config />
+ 
+    <!-- scans and register beans using annotation-config (metadata) -->
+    <context:component-scan base-package="cat.poc" />
+
+	<!-- to support Java-to-JSON and vice-versa conversion -->
+    <bean id="jsonProvider" class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />
+    
+    <!-- to support Java-to-XML and vice-versa conversion -->
+    <bean id="jaxbProvider" class="org.apache.cxf.jaxrs.provider.JAXBElementProvider" />
+ 
+
+    <jaxrs:server id="PocRWS" address="/service">
+        <jaxrs:serviceBeans>
+            <ref bean="pocService" />
+        </jaxrs:serviceBeans>
+ 
+        <jaxrs:providers>
+            <ref bean="jaxbProvider" />
+            <ref bean="jsonProvider" />
+        </jaxrs:providers>
+
+		<jaxrs:features>
+            <cxf:logging/>
+        </jaxrs:features>
+
+    </jaxrs:server>
+
+
+</beans>
